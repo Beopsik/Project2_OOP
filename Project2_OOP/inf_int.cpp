@@ -1,5 +1,5 @@
 #include "inf_int.h"
-
+#include <algorithm>
 // 
 // to be filled by students
 //
@@ -39,7 +39,7 @@ inf_int::inf_int(const string integer) {
 		this->thesign = true;
 		this->digits = integer;
 	}
-	this->length = integer.length();
+	this->length = this->digits.length();
 }
 inf_int::inf_int(const inf_int& integer) {
 	this->digits = integer.digits;
@@ -52,17 +52,150 @@ inf_int::~inf_int() {
 
 inf_int operator+(const inf_int& integer1, const inf_int& integer2) {
 	string resultDigits;
-	unsigned int resultLength;
 	bool resultTheSign;
 
-	if (integer1.thesign == true && integer2.thesign == false) {
+	unsigned int maxLength = max(integer1.length, integer2.length);
 
+	string digitsInteger1 = "";
+	string digitsInteger2 = "";
+	inf_int forComp;
+
+	for (int i = 0; i < maxLength - integer1.length; i++)
+		digitsInteger1.append("0");
+	for (int i = 0; i < maxLength - integer2.length; i++)
+		digitsInteger2.append("0");
+
+	if (integer1.thesign == true && integer2.thesign == false || integer1.thesign == false && integer2.thesign == true) {
+
+		if (integer1.thesign == true && integer2.thesign == false) {
+			digitsInteger1.append(integer1.digits);
+			digitsInteger2.append(integer2.digits);
+			digitsInteger2 = forComp.tenComplement(digitsInteger2, maxLength);
+		}
+		else {
+			digitsInteger2.append(integer2.digits);
+			digitsInteger1.append(integer1.digits);
+			digitsInteger1 = forComp.tenComplement(digitsInteger1, maxLength);
+		}
+		
+		string opResultReversed = "";
+		int carry = 0;
+		for (int i = maxLength - 1; i >= 0; i--) {
+			int aNum = digitsInteger1[i] - '0' + carry;
+			int bNum = digitsInteger2[i] - '0';
+			int sum = aNum + bNum;
+
+			opResultReversed.append(to_string(sum % 10));
+			carry = sum / 10;
+		}
+
+		string opResult="";
+		if (carry == 1)
+			opResult.append("1");
+		while (!opResultReversed.empty()) {
+			opResult.push_back(opResultReversed.back());
+			opResultReversed.pop_back();
+		}
+
+		if (opResult.length() > maxLength) {
+			resultDigits = opResult.substr(1);
+			resultTheSign = true;
+		}
+		else {
+			resultDigits = forComp.tenComplement(opResult, maxLength);
+			resultTheSign = false;
+		}
+		
+		int idx = 0;
+		while (resultDigits[idx] == '0'&&resultDigits.length()!=1)
+			idx++;
+
+		resultDigits = resultDigits.substr(idx);
+
+		if (!resultTheSign)
+			resultDigits = "-" + resultDigits;
+
+		inf_int result(resultDigits);
+		return result;
 	}
-	else if (integer1.thesign == false && integer2.thesign == true) {
+	else if (integer1.thesign == false && integer2.thesign == false) {
+	
+		digitsInteger1.append(integer1.digits);
+		digitsInteger1 = forComp.tenComplement(digitsInteger1, maxLength);
+		digitsInteger2.append(integer2.digits);
+		digitsInteger2 = forComp.tenComplement(digitsInteger2, maxLength);
+			
 
+		string opResultReversed = "";
+		int carry = 0;
+		for (int i = maxLength - 1; i >= 0; i--) {
+			int aNum = digitsInteger1[i] - '0' + carry;
+			int bNum = digitsInteger2[i] - '0';
+			int sum = aNum + bNum;
+
+			opResultReversed.append(to_string(sum % 10));
+			carry = sum / 10;
+		}
+
+		string opResult = "";
+		if (carry == 1)
+			opResult.append("1");
+		while (!opResultReversed.empty()) {
+			opResult.push_back(opResultReversed.back());
+			opResultReversed.pop_back();
+		}
+
+		if (opResult.length() > maxLength) {
+			resultDigits = opResult.substr(1);
+			resultDigits = forComp.tenComplement(resultDigits, maxLength);
+		}
+		else {
+			resultDigits = "1";
+			resultDigits += forComp.tenComplement(opResult, maxLength);
+		}
+
+		int idx = 0;
+		while (resultDigits[idx] == '0')
+			idx++;
+		resultDigits = resultDigits.substr(idx);
+
+		resultDigits = "-" + resultDigits;
+
+		inf_int result(resultDigits);
+		return result;
 	}
 	else {
+		digitsInteger1.append(integer1.digits);
+		digitsInteger2.append(integer2.digits);
 
+
+		string opResultReversed = "";
+		int carry = 0;
+		for (int i = maxLength - 1; i >= 0; i--) {
+			int aNum = digitsInteger1[i] - '0' + carry;
+			int bNum = digitsInteger2[i] - '0';
+			int sum = aNum + bNum;
+
+			opResultReversed.append(to_string(sum % 10));
+			carry = sum / 10;
+		}
+
+		string opResult = "";
+		if (carry == 1)
+			opResult.append("1");
+		while (!opResultReversed.empty()) {
+			opResult.push_back(opResultReversed.back());
+			opResultReversed.pop_back();
+		}
+		resultDigits = opResult;
+
+		int idx = 0;
+		while (resultDigits[idx] == '0')
+			idx++;
+		resultDigits = resultDigits.substr(idx);
+
+		inf_int result(resultDigits);
+		return result;
 	}
 
 	return integer1;
@@ -73,10 +206,20 @@ inf_int operator-(const inf_int& integer1, const inf_int& integer2) {
 inf_int operator*(const inf_int& integer1, const inf_int& integer2) {
 	return integer1;
 }
+ostream& operator<<(ostream& os, const inf_int& integer) {
+	if (!integer.thesign)
+		printf("-");
 
-string inf_int::tenComplement(const string integer, const int integerLength) {
+	printf("%s", integer.digits.c_str());
+	return os;
+}
+/*inf_int& inf_int::operator=(const inf_int& integer) {
+
+}*/
+
+string inf_int::tenComplement(const string integer, const int compLength) const {
 	string tenComp = "10";
-	for(int i=integerLength; i>1; i--)
+	for(int i= compLength; i>1; i--)
 		tenComp.append("0");
 
 	string resultReversed = "";

@@ -7,7 +7,7 @@ using namespace std;
 
 int main()
 {
-	inf_int a, e;
+	/*inf_int a, e;
 	inf_int b(100);
 	inf_int c("321111111111122222222222233333333333444444444445555555555");
 	inf_int d("123451987651234572749499923455022211");
@@ -30,7 +30,22 @@ int main()
 		// cout << "e : " << e << endl;
 		cout << "f : " << f << endl;
 		// cout << "g : " << g << endl;
-	}
+	}*/
+	/*inf_int c("321111111111122222222222233333333333444444444445555555555");
+	cout << c << endl;
+	inf_int d("-33");
+	cout << d << endl;
+	inf_int a = d + c;
+	inf_int b = c + d;
+
+	inf_int e("3");
+	inf_int f("-1");
+	inf_int g = e + f;*/
+	
+	inf_int c("321111111111122222222222233333333333444444444445555555555");
+	inf_int d("321111111111122222222222233333333333444444444445555555555");
+	inf_int a = d + c;
+	cout << a << endl;
 
 	return 0;
 }

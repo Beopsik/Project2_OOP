@@ -23,7 +23,7 @@ public:
 
 	inf_int& operator=(const inf_int&); // assignment operator
 
-	string tenComplement(const string, const int);
+	string tenComplement(const string, const int) const;
 
 	friend bool operator==(const inf_int&, const inf_int&);
 	friend bool operator!=(const inf_int&, const inf_int&);
