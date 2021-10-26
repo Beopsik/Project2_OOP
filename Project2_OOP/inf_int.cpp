@@ -202,7 +202,65 @@ inf_int operator-(const inf_int& integer1, const inf_int& integer2) {
 	}
 }
 inf_int operator*(const inf_int& integer1, const inf_int& integer2) {
-	return integer1;
+	string resultDigits;
+	bool resultTheSign;
+
+	/*unsigned int maxLength = max(integer1.length, integer2.length);
+
+	string digitsInteger1 = "";
+	string digitsInteger2 = "";
+
+	for (int i = 0; i < maxLength - integer1.length; i++)
+		digitsInteger1.append("0");
+	for (int i = 0; i < maxLength - integer2.length; i++)
+		digitsInteger2.append("0");*/
+
+	if (integer1.thesign == true && integer2.thesign == true ||
+		integer1.thesign == false && integer2.thesign == false) {
+		resultTheSign = true;
+	}
+	else {
+		resultTheSign = false;
+	}
+
+	
+	string digitsInteger1 = integer1.digits;
+	string digitsInteger2 = integer2.digits;
+
+	string opResultReversed = "";
+	inf_int mul(0);
+	for (int i = digitsInteger1.length() - 1; i >= 0; i--) {
+		int aNum = digitsInteger1[i] - '0';
+		int carry = 0;
+		for (int j = digitsInteger2.length() - 1; j >= 0; j--) {
+			int bNum = digitsInteger2[j] - '0';
+			int product = aNum * bNum + carry;
+
+			opResultReversed.append(to_string(product % 10));
+			carry = product / 10;
+		}
+		string opResult = "";
+		if (carry != 0)
+			opResult.append(to_string(carry));
+		while (!opResultReversed.empty()) {
+			opResult.push_back(opResultReversed.back());
+			opResultReversed.pop_back();
+		}
+		
+		for (int j = i; j < digitsInteger1.length() - 1; j++) {
+			opResult.append("0");
+		}
+		inf_int temp(opResult);
+		mul = mul + temp;
+	}
+
+	if (!resultTheSign)
+		resultDigits = "-" + mul.digits;
+	else
+		resultDigits = mul.digits;
+
+	inf_int result(resultDigits);
+	return result;
 }
 ostream& operator<<(ostream& os, const inf_int& integer) {
 	if (!integer.thesign)
@@ -211,9 +269,13 @@ ostream& operator<<(ostream& os, const inf_int& integer) {
 	printf("%s", integer.digits.c_str());
 	return os;
 }
-/*inf_int& inf_int::operator=(const inf_int& integer) {
+inf_int& inf_int::operator=(const inf_int& integer) {
+	this->digits = integer.digits;
+	this->length = integer.length;
+	this->thesign = integer.thesign;
 
-}*/
+	return *this;
+}
 
 string inf_int::tenComplement(const string integer, const int compLength) const {
 	string tenComp = "10";
