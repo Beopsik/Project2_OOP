@@ -191,8 +191,8 @@ inf_int operator+(const inf_int& integer1, const inf_int& integer2) {
 	return result;
 }
 inf_int operator-(const inf_int& integer1, const inf_int& integer2) {
-	if (integer1.thesign == true && integer2.thesign == true
-		|| integer1.thesign == false && integer2.thesign == true) {
+	if ((integer1.thesign == true && integer2.thesign == true
+		|| integer1.thesign == false && integer2.thesign == true)&& integer2.digits != "0") {
 		inf_int changeTheSignInteger2("-"+integer2.digits);
 		return operator+(integer1, changeTheSignInteger2);
 	}
@@ -204,16 +204,6 @@ inf_int operator-(const inf_int& integer1, const inf_int& integer2) {
 inf_int operator*(const inf_int& integer1, const inf_int& integer2) {
 	string resultDigits;
 	bool resultTheSign;
-
-	/*unsigned int maxLength = max(integer1.length, integer2.length);
-
-	string digitsInteger1 = "";
-	string digitsInteger2 = "";
-
-	for (int i = 0; i < maxLength - integer1.length; i++)
-		digitsInteger1.append("0");
-	for (int i = 0; i < maxLength - integer2.length; i++)
-		digitsInteger2.append("0");*/
 
 	if (integer1.thesign == true && integer2.thesign == true ||
 		integer1.thesign == false && integer2.thesign == false) {
