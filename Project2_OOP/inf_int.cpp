@@ -105,18 +105,6 @@ inf_int operator+(const inf_int& integer1, const inf_int& integer2) {
 			resultDigits = forComp.tenComplement(opResult, maxLength);
 			resultTheSign = false;
 		}
-		
-		/*int idx = 0;
-		while (resultDigits[idx] == '0'&&resultDigits.length()!=1)
-			idx++;
-
-		resultDigits = resultDigits.substr(idx);
-
-		if (!resultTheSign)
-			resultDigits = "-" + resultDigits;
-
-		inf_int result(resultDigits);
-		return result;*/
 	}
 	else if (integer1.thesign == false && integer2.thesign == false) {
 	
@@ -154,16 +142,6 @@ inf_int operator+(const inf_int& integer1, const inf_int& integer2) {
 			resultDigits += forComp.tenComplement(opResult, maxLength);
 		}
 		resultTheSign = false;
-
-		/*int idx = 0;
-		while (resultDigits[idx] == '0')
-			idx++;
-		resultDigits = resultDigits.substr(idx);
-
-		resultDigits = "-" + resultDigits;
-
-		inf_int result(resultDigits);
-		return result;*/
 	}
 	else {
 		digitsInteger1.append(integer1.digits);
@@ -190,14 +168,6 @@ inf_int operator+(const inf_int& integer1, const inf_int& integer2) {
 		}
 		resultDigits = opResult;
 		resultTheSign = true;
-
-		/*int idx = 0;
-		while (resultDigits[idx] == '0')
-			idx++;
-		resultDigits = resultDigits.substr(idx);
-
-		inf_int result(resultDigits);
-		return result;*/
 	}
 
 	int zeroIdx=0;
