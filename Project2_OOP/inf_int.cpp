@@ -106,7 +106,7 @@ inf_int operator+(const inf_int& integer1, const inf_int& integer2) {
 			resultTheSign = false;
 		}
 		
-		int idx = 0;
+		/*int idx = 0;
 		while (resultDigits[idx] == '0'&&resultDigits.length()!=1)
 			idx++;
 
@@ -116,7 +116,7 @@ inf_int operator+(const inf_int& integer1, const inf_int& integer2) {
 			resultDigits = "-" + resultDigits;
 
 		inf_int result(resultDigits);
-		return result;
+		return result;*/
 	}
 	else if (integer1.thesign == false && integer2.thesign == false) {
 	
@@ -153,8 +153,9 @@ inf_int operator+(const inf_int& integer1, const inf_int& integer2) {
 			resultDigits = "1";
 			resultDigits += forComp.tenComplement(opResult, maxLength);
 		}
+		resultTheSign = false;
 
-		int idx = 0;
+		/*int idx = 0;
 		while (resultDigits[idx] == '0')
 			idx++;
 		resultDigits = resultDigits.substr(idx);
@@ -162,7 +163,7 @@ inf_int operator+(const inf_int& integer1, const inf_int& integer2) {
 		resultDigits = "-" + resultDigits;
 
 		inf_int result(resultDigits);
-		return result;
+		return result;*/
 	}
 	else {
 		digitsInteger1.append(integer1.digits);
@@ -188,20 +189,47 @@ inf_int operator+(const inf_int& integer1, const inf_int& integer2) {
 			opResultReversed.pop_back();
 		}
 		resultDigits = opResult;
+		resultTheSign = true;
 
-		int idx = 0;
+		/*int idx = 0;
 		while (resultDigits[idx] == '0')
 			idx++;
 		resultDigits = resultDigits.substr(idx);
 
 		inf_int result(resultDigits);
-		return result;
+		return result;*/
 	}
 
-	return integer1;
+	int zeroIdx=0;
+	for (int i = 0; i < resultDigits.length(); i++) {
+		if (resultDigits[i] == '0')
+			zeroIdx++;
+		else
+			break;
+	}
+	if (zeroIdx == resultDigits.length()) {
+		resultDigits = "0";
+	}
+	else {
+		resultDigits = resultDigits.substr(zeroIdx);
+	}
+
+	if (!resultTheSign)
+		resultDigits = "-" + resultDigits;
+
+	inf_int result(resultDigits);
+	return result;
 }
 inf_int operator-(const inf_int& integer1, const inf_int& integer2) {
-	return integer1;
+	if (integer1.thesign == true && integer2.thesign == true
+		|| integer1.thesign == false && integer2.thesign == true) {
+		inf_int changeTheSignInteger2("-"+integer2.digits);
+		return operator+(integer1, changeTheSignInteger2);
+	}
+	else {
+		inf_int changeTheSignInteger2(integer2.digits);
+		return operator+(integer1, changeTheSignInteger2);
+	}
 }
 inf_int operator*(const inf_int& integer1, const inf_int& integer2) {
 	return integer1;
