@@ -31,15 +31,16 @@ inf_int::inf_int(int integer) {
 	this->length = to_string(integer).length();
 }
 inf_int::inf_int(const string integer) {
-	if (integer.front() == '-') {
-		this->thesign = false;
-		this->digits=integer.substr(1);
-	}
-	else {
-		this->thesign = true;
-		this->digits = integer;
-	}
-	this->length = this->digits.length();
+  if(integer.at(0) == '-') {
+	  this->digits = integer.substr(1, integer.size() - 1);
+    this->length = integer.size() - 1;
+    this->thesign = false;
+  }
+  else {
+	  this->digits = integer;
+    this->length = integer.size();
+    this->thesign = true;
+  }
 }
 inf_int::inf_int(const inf_int& integer) {
 	this->digits = integer.digits;
@@ -252,20 +253,6 @@ inf_int operator*(const inf_int& integer1, const inf_int& integer2) {
 	inf_int result(resultDigits);
 	return result;
 }
-ostream& operator<<(ostream& os, const inf_int& integer) {
-	if (!integer.thesign)
-		printf("-");
-
-	printf("%s", integer.digits.c_str());
-	return os;
-}
-inf_int& inf_int::operator=(const inf_int& integer) {
-	this->digits = integer.digits;
-	this->length = integer.length;
-	this->thesign = integer.thesign;
-
-	return *this;
-}
 
 string inf_int::tenComplement(const string integer, const int compLength) const {
 	string tenComp = "10";
@@ -293,4 +280,86 @@ string inf_int::tenComplement(const string integer, const int compLength) const 
 	}
 
 	return result;
+}
+
+inf_int& inf_int::operator=(const inf_int& x) {
+	this->digits = x.digits;
+	this->length = x.length;
+	this->thesign = x.thesign;
+
+	return *this;
+}
+
+bool operator==(const inf_int& x, const inf_int& y) {
+	if (x.digits == y.digits && x.thesign == y.thesign) {
+		return true;
+	}
+	else {
+		return false;
+	}
+}
+
+bool operator!=(const inf_int& x, const inf_int& y) {
+	return !operator==(x, y);
+}
+
+bool operator>(const inf_int& x, const inf_int& y) {
+	if (x.thesign == true && y.thesign == false) {
+		return true;
+	}
+	else if (x.thesign == false && y.thesign == true) {
+		return false;
+	}
+	else if (x.thesign == true && y.thesign == true) {
+		if (x.digits.size() > y.digits.size()) {
+			return true;
+		}
+		else if (x.digits.size() < y.digits.size()) {
+			return false;
+		}
+		else {
+			if (x.digits > y.digits) {
+				return true;
+			}
+			else {
+				return false;
+			}
+		}
+	}
+	else {
+		if (x.digits.size() > y.digits.size()) {
+			return false;
+		}
+		else if (x.digits.size() < y.digits.size()) {
+			return true;
+		}
+		else {
+			if (x.digits < y.digits) {
+				return true;
+			}
+			else {
+				return false;
+			}
+		}
+	}
+}
+
+bool operator<(const inf_int& x, const inf_int& y) {
+	if (x.digits == y.digits) {
+		return false;
+	}
+	else {
+		return !operator>(x, y);
+	}
+}
+
+ostream& operator<<(ostream& os, const inf_int& infint)
+{
+	string str(infint.digits);
+	if (!infint.thesign) {
+		str.insert(0, "-");
+	}
+	os << str;
+	return os;
+	// TODO: 여기에 return 문을 삽입합니다.
 }
